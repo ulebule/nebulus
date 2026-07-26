@@ -36,6 +36,22 @@
     display:none;align-items:center;justify-content:center;font-size:15px;color:#bcd0ff;
     background:rgba(20,28,60,.5);border:1px solid rgba(120,160,255,.45);cursor:pointer;pointer-events:auto;}
   #stage.gest #pad{display:none;}
+  #nameBox{position:absolute;inset:0;z-index:9;display:none;align-items:center;justify-content:center;
+    background:rgba(2,3,10,.82);backdrop-filter:blur(2px);}
+  #nameCard{width:78%;max-width:340px;padding:22px 18px;border-radius:12px;text-align:center;
+    background:linear-gradient(180deg,#0b1030,#070a1c);border:2px solid rgba(120,160,255,.6);
+    box-shadow:0 0 40px rgba(60,120,255,.35);}
+  #nameTitle{color:#ffd23f;font-size:20px;font-weight:bold;letter-spacing:1px;margin-bottom:6px;}
+  #namePrompt{color:#9fb6ff;font-size:13px;margin-bottom:14px;}
+  #nameInput{width:100%;box-sizing:border-box;padding:12px;font-family:"Courier New",monospace;
+    font-size:22px;font-weight:bold;text-align:center;text-transform:uppercase;letter-spacing:3px;
+    color:#e8eeff;background:#02030a;border:2px solid rgba(120,160,255,.5);border-radius:8px;outline:none;}
+  #nameInput:focus{border-color:#ffd23f;}
+  #nameOk{margin-top:14px;padding:10px 30px;font-family:"Courier New",monospace;font-size:16px;font-weight:bold;
+    color:#02030a;background:#ffd23f;border:none;border-radius:8px;cursor:pointer;letter-spacing:1px;}
+  #nameOk:active{background:#fff;}
+  #nameOk:disabled{opacity:.5;}
+  #nameNote{margin-top:10px;color:#9affc0;font-size:12px;min-height:14px;}
 </style>
 </head>
 <body>
@@ -56,6 +72,13 @@
         <div class="btn" id="bJ">▲</div>
       </div>
     </div>
+    <div id="nameBox"><div id="nameCard">
+      <div id="nameTitle">NEW RECORD!</div>
+      <div id="namePrompt">ENTER YOUR NAME</div>
+      <input id="nameInput" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="done">
+      <button id="nameOk">OK</button>
+      <div id="nameNote"></div>
+    </div></div>
   </div>
 </div>
 <script>
@@ -91,7 +114,7 @@ const STR={
   atTop:'AT THE TOP!', reachedTop:'YOU REACHED THE TOP!', towerReached:'Tower reached',
   scoreLbl:'Score', bonusNext:'Next: the underwater submarine BONUS',
   bonusGo:'BONUS — CATCH THE FISH!', bonusHud:'BONUS   FISH', bonusKeys:'▲ rise   ✦ bubble',
-  hiscores:'HI-SCORES', you:'YOU', rank:'#', twr:'TWR', newRec:'NEW RECORD!'},
+  hiscores:'HI-SCORES', you:'YOU', rank:'#', twr:'TWR', newRec:'NEW RECORD!', enterName:'ENTER YOUR NAME', okBtn:'OK', saving:'saving…', loading:'loading scores…', offline:'offline — local scores only'},
  sl:{game:'S T O L P', tower:'STOLP', tribute:'priklon igri NEBULUS (1987)',
   h1:'Splezaj po vrtečem stolpu do vrha', h2:'Preskakuj luknje in nestabilne dele',
   h3:'Uporabi dvigala, pazi na vrata', h4:'Streljaj na sovražnike',
@@ -103,7 +126,7 @@ const STR={
   atTop:'NA VRHU!', reachedTop:'SPLEZAL SI NA VRH!', towerReached:'Dosežen stolp',
   scoreLbl:'Točke', bonusNext:'Sledi podvodni BONUS s podmornico',
   bonusGo:'BONUS — ULOVI RIBE!', bonusHud:'BONUS   RIBE', bonusKeys:'▲ dvig   ✦ mehurček',
-  hiscores:'NAJBOLJŠI REZULTATI', you:'TI', rank:'#', twr:'STO', newRec:'NOV REKORD!'},
+  hiscores:'NAJBOLJŠI REZULTATI', you:'TI', rank:'#', twr:'STO', newRec:'NOV REKORD!', enterName:'VPIŠI SVOJE IME', okBtn:'V REDU', saving:'shranjujem…', loading:'nalagam rezultate…', offline:'brez povezave — lokalni rezultati'},
  de:{game:'T U R M', tower:'TURM', tribute:'eine Hommage an NEBULUS (1987)',
   h1:'Erklimme den rotierenden Turm', h2:'Springe über Lücken und morsche Kanten',
   h3:'Nutze die Aufzüge, achte auf Türen', h4:'Schieße auf die Gegner',
@@ -115,7 +138,7 @@ const STR={
   atTop:'GANZ OBEN!', reachedTop:'DU HAST ES GESCHAFFT!', towerReached:'Erreichter Turm',
   scoreLbl:'Punkte', bonusNext:'Als Nächstes: der U-Boot-BONUS',
   bonusGo:'BONUS — FANGE DIE FISCHE!', bonusHud:'BONUS   FISCHE', bonusKeys:'▲ steigen   ✦ Blase',
-  hiscores:'BESTENLISTE', you:'DU', rank:'#', twr:'TRM', newRec:'NEUER REKORD!'},
+  hiscores:'BESTENLISTE', you:'DU', rank:'#', twr:'TRM', newRec:'NEUER REKORD!', enterName:'NAME EINGEBEN', okBtn:'OK', saving:'speichere…', loading:'lade Punkte…', offline:'offline — nur lokale Punkte'},
  it:{game:'T O R R E', tower:'TORRE', tribute:'un omaggio a NEBULUS (1987)',
   h1:'Scala la torre rotante fino in cima', h2:'Salta i vuoti e le sporgenze instabili',
   h3:'Usa gli ascensori, attento alle porte', h4:'Spara ai nemici',
@@ -127,7 +150,7 @@ const STR={
   atTop:'IN CIMA!', reachedTop:'SEI ARRIVATO IN CIMA!', towerReached:'Torre raggiunta',
   scoreLbl:'Punti', bonusNext:'Ora: il BONUS subacqueo col sottomarino',
   bonusGo:'BONUS — PRENDI I PESCI!', bonusHud:'BONUS   PESCI', bonusKeys:'▲ sali   ✦ bolla',
-  hiscores:'MIGLIORI PUNTEGGI', you:'TU', rank:'#', twr:'TOR', newRec:'NUOVO RECORD!'},
+  hiscores:'MIGLIORI PUNTEGGI', you:'TU', rank:'#', twr:'TOR', newRec:'NUOVO RECORD!', enterName:'INSERISCI NOME', okBtn:'OK', saving:'salvataggio…', loading:'caricamento…', offline:'offline — punteggi locali'},
  fr:{game:'T O U R', tower:'TOUR', tribute:'un hommage à NEBULUS (1987)',
   h1:'Grimpe la tour rotative jusqu\'au sommet', h2:'Saute les trous et les corniches fragiles',
   h3:'Prends les ascenseurs, attention aux portes', h4:'Tire sur les ennemis',
@@ -139,7 +162,7 @@ const STR={
   atTop:'AU SOMMET !', reachedTop:'TU AS ATTEINT LE SOMMET !', towerReached:'Tour atteinte',
   scoreLbl:'Score', bonusNext:'Ensuite : le BONUS sous-marin',
   bonusGo:'BONUS — ATTRAPE LES POISSONS !', bonusHud:'BONUS   POISSONS', bonusKeys:'▲ monter   ✦ bulle',
-  hiscores:'MEILLEURS SCORES', you:'TOI', rank:'#', twr:'TR', newRec:'NOUVEAU RECORD !'},
+  hiscores:'MEILLEURS SCORES', you:'TOI', rank:'#', twr:'TR', newRec:'NOUVEAU RECORD !', enterName:'ENTREZ VOTRE NOM', okBtn:'OK', saving:'sauvegarde…', loading:'chargement…', offline:'hors ligne — scores locaux'},
 };
 // gesture-control strings, merged into the tables above
 const GEST={
@@ -514,31 +537,91 @@ let hiscores=[{n:'POGO',s:9500,l:6},{n:'HEWSON',s:7200,l:5},{n:'NEB',s:5400,l:4}
               {n:'C64',s:3800,l:3},{n:'ZX',s:2600,l:3},{n:'TOWER',s:1700,l:2},
               {n:'CBM',s:900,l:1},{n:'POGO',s:400,l:1}];
 let lastEntry=null;
-function submitScore(sc,lv){
-  const e={n:'',s:sc,l:lv,you:true};
+function localSubmit(sc,lv){                 // offline fallback table (this session only)
+  const e={n:(myEntry?myEntry.n:'YOU'),s:sc,l:lv,you:true};
   hiscores.forEach(h=>{h.you=false;});
-  hiscores.push(e);
-  hiscores.sort((a,b)=>b.s-a.s);
-  hiscores=hiscores.slice(0,8);
+  hiscores.push(e); hiscores.sort((a,b)=>b.s-a.s); hiscores=hiscores.slice(0,8);
   lastEntry = hiscores.indexOf(e)>=0 ? e : null;
-  return hiscores.indexOf(e);
+}
+
+// ---------- online leaderboard (Supabase) ----------
+const SB_URL='https://uyvhsimztcktpenywxme.supabase.co';
+const SB_KEY='sb_publishable_KTv97VQ9j1rFllFXTXk7tg_djEGd-cV';
+function sbH(x){ return Object.assign({apikey:SB_KEY,Authorization:'Bearer '+SB_KEY},x||{}); }
+let boardRows=null, boardState='idle';       // idle | loading | ok | error
+let myEntry=null;                            // {n,s,l} just submitted, for highlight
+let deadScore=0, deadLevel=0;
+async function loadBoard(){
+  boardState='loading';
+  try{
+    const r=await fetch(SB_URL+'/rest/v1/scores?select=name,score,level&order=score.desc&limit=10',
+                        {headers:sbH(),cache:'no-store'});
+    if(!r.ok) throw 0;
+    const d=await r.json();
+    boardRows=d.map(x=>({n:String(x.name||'?').toUpperCase().slice(0,12),s:x.score|0,l:x.level|0}));
+    boardState='ok';
+  }catch(e){ boardState='error'; boardRows=null; }
+}
+async function submitOnline(name,sc,lv){
+  try{
+    const r=await fetch(SB_URL+'/rest/v1/scores',{method:'POST',
+      headers:sbH({'Content-Type':'application/json',Prefer:'return=minimal'}),
+      body:JSON.stringify({name:name.slice(0,12),score:sc,level:lv})});
+    return r.ok;
+  }catch(e){ return false; }
+}
+function onDeath(sc,lv){
+  deadScore=sc; deadLevel=lv; myEntry=null;
+  localSubmit(sc,lv);
+  loadBoard();
+  if(sc>0) openNameEntry();
+}
+
+// ---------- name entry overlay ----------
+function safeLS(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } }
+let nameEntryOpen=false;
+function openNameEntry(){
+  const box=document.getElementById('nameBox'), inp=document.getElementById('nameInput');
+  document.getElementById('nameTitle').textContent=T('newRec');
+  document.getElementById('namePrompt').textContent=T('enterName');
+  document.getElementById('nameOk').textContent=T('okBtn');
+  document.getElementById('nameOk').disabled=false;
+  document.getElementById('nameNote').textContent='';
+  inp.value=safeLS('nb_name')||'';
+  box.style.display='flex'; nameEntryOpen=true;
+  setTimeout(()=>{ try{ inp.focus(); inp.select(); }catch(e){} },60);
+}
+async function finishNameEntry(){
+  if(!nameEntryOpen) return;
+  const inp=document.getElementById('nameInput'), note=document.getElementById('nameNote');
+  let nm=(inp.value||'').trim().toUpperCase().replace(/[^ -~]/g,'').slice(0,12);
+  if(!nm) nm='???';
+  safeLS('nb_name',nm);
+  myEntry={n:nm,s:deadScore,l:deadLevel};
+  note.textContent=T('saving'); document.getElementById('nameOk').disabled=true;
+  const ok=await submitOnline(nm,deadScore,deadLevel);
+  nameEntryOpen=false; document.getElementById('nameBox').style.display='none';
+  if(ok){ await loadBoard(); } else { boardState='error'; }
 }
 function drawHiScores(top){
-  const rank=lastEntry?hiscores.indexOf(lastEntry):-1;
   text(T('hiscores'),CX,top,20,'#7fe3ff');
-  if(rank===0) text(T('newRec'),CX,top+26,15,'#ffd23f');
-  const y0=top+52, rowH=27;
+  const y0=top+40, rowH=27;
+  if(boardState==='loading'){ text(T('loading'),CX,y0+30,14,'#9fb6ff'); return; }
+  let rows, offline=false;
+  if(boardState==='ok' && boardRows){ rows=boardRows.slice(0,8); }
+  else { offline=true; rows=hiscores.slice(0,8).map(h=>({n:h.n,s:h.s,l:h.l,you:h.you})); }
   X.font='bold 15px "Courier New",monospace';
-  for(let i=0;i<hiscores.length;i++){
-    const h=hiscores[i], y=y0+i*rowH;
-    const mine=h.you && i===rank;
+  for(let i=0;i<rows.length;i++){
+    const h=rows[i], y=y0+i*rowH;
+    const mine = myEntry && ((offline&&h.you) || (h.n===myEntry.n && h.s===myEntry.s && h.l===myEntry.l));
     const blink=mine && Math.floor(perfNow/260)%2===0;
     const col = mine ? (blink?'#ffffff':'#ffd23f') : '#9fb6ff';
     text(String(i+1).padStart(2,' ')+'.',CX-130,y,15,col,'left');
-    text(h.you?T('you'):h.n,CX-92,y,15,col,'left');
+    text(h.n,CX-92,y,15,col,'left');
     text(String(h.s).padStart(6,'0'),CX+58,y,15,col,'right');
     text(T('twr')+' '+h.l,CX+130,y,13,mine?col:'#6f83b8','right');
   }
+  if(offline) text(T('offline'),CX,y0+8*rowH+12,11,'#ff9f6f');
 }
 
 // ---------- input ----------
@@ -559,6 +642,7 @@ function press(k,down){
   }
 }
 addEventListener('keydown',e=>{
+  if(nameEntryOpen)return;
   if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space',' '].includes(e.key)||e.code==='Space')e.preventDefault();
   if(e.key==='ArrowLeft')press('left',true);
   else if(e.key==='ArrowRight')press('right',true);
@@ -569,6 +653,7 @@ addEventListener('keydown',e=>{
   else if(e.key==='l'||e.key==='L')cycleLang();
 });
 addEventListener('keyup',e=>{
+  if(nameEntryOpen)return;
   if(e.key==='ArrowLeft')press('left',false);
   else if(e.key==='ArrowRight')press('right',false);
   else if(e.key==='ArrowUp'||e.code==='Space')press('jump',false);
@@ -590,7 +675,14 @@ bindUI('mute',()=>toggleMute());
 bindUI('lang',()=>cycleLang());
 document.getElementById('lang').textContent=lang.toUpperCase();
 document.documentElement.lang=lang;
-function menuTap(e){ if(inputLock>0){if(e&&e.cancelable)e.preventDefault();return;}
+(function(){ const ok=document.getElementById('nameOk'), inp=document.getElementById('nameInput');
+  ok.addEventListener('click',e=>{e.stopPropagation();finishNameEntry();});
+  ok.addEventListener('touchstart',e=>{e.stopPropagation();e.preventDefault();finishNameEntry();},{passive:false});
+  inp.addEventListener('keydown',e=>{ e.stopPropagation(); if(e.key==='Enter'){e.preventDefault();finishNameEntry();} });
+  inp.addEventListener('keyup',e=>e.stopPropagation());
+  inp.addEventListener('input',()=>{ inp.value=inp.value.toUpperCase(); });
+})();
+function menuTap(e){ if(nameEntryOpen)return; if(inputLock>0){if(e&&e.cancelable)e.preventDefault();return;}
   if(state==='boot'){if(e&&e.cancelable)e.preventDefault();endBoot();}
   else if(state==='intro'){if(e&&e.cancelable)e.preventDefault();endIntro();}
   else if(state==='title'||state==='dead'){if(e&&e.cancelable)e.preventDefault();startGame();}
@@ -798,7 +890,7 @@ function update(dt){
 function loseLife(cause){
   lives--;
   if(cause==='hit')sfx.hit(); else sfx.fall();
-  if(lives<=0){ state='dead'; best=Math.max(best,level); submitScore(score,level); stopMusic(); lockInput(1.2); msg(T('gameOver'),2.4); return; }
+  if(lives<=0){ state='dead'; best=Math.max(best,level); onDeath(score,level); stopMusic(); lockInput(1.2); msg(T('gameOver'),2.4); return; }
   let sf = (cause==='hit') ? Math.max(0,player.floor-1) : 0;
   player.floor=sf; player.y=sf*SPACING; player.vy=0; player.ground=true; player.inv=1.6; player.onLift=null;
   if(cause==='time'){ timeLeft=TIME0; msg(T('timeUp'),1.4); }
