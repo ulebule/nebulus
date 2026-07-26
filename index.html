@@ -35,6 +35,9 @@
   #ctrl{position:absolute;left:8px;top:132px;z-index:7;width:30px;height:30px;border-radius:6px;
     display:none;align-items:center;justify-content:center;font-size:15px;color:#bcd0ff;
     background:rgba(20,28,60,.5);border:1px solid rgba(120,160,255,.45);cursor:pointer;pointer-events:auto;}
+  #nick{position:absolute;left:8px;top:168px;z-index:7;width:30px;height:30px;border-radius:6px;
+    display:none;align-items:center;justify-content:center;font-size:15px;color:#8affc0;
+    background:rgba(20,28,60,.5);border:1px solid rgba(120,200,160,.5);cursor:pointer;pointer-events:auto;}
   #stage.gest #pad{display:none;}
   #nameBox{position:absolute;inset:0;z-index:9;display:none;align-items:center;justify-content:center;
     background:rgba(2,3,10,.82);backdrop-filter:blur(2px);}
@@ -61,6 +64,7 @@
     <div id="mute">♪</div>
     <div id="lang">EN</div>
     <div id="ctrl">✋</div>
+    <div id="nick">☺</div>
     <div id="crt"></div>
     <div id="pad">
       <div class="cluster">
@@ -103,9 +107,9 @@ let pal=PALETTES[0];
 // ---------- i18n: English default, plus Slovenian / German / Italian / French ----------
 const LANGS=['en','sl','de','it','fr'];
 const STR={
- en:{game:'T O W E R', tower:'TOWER', tribute:'a tribute to NEBULUS (1987)',
+ en:{nickHint:'shown on the online score table', doorEnter:'INTO THE DOOR!', findDoor:'FIND THE DOOR AT THE TOP!', towerDown:'TOWER DESTROYED!', playingAs:'PLAYING AS', changeName:'tap to change', enterNick:'ENTER YOUR NAME', okBtn2:'START', game:'T O W E R', tower:'TOWER', tribute:'a tribute to NEBULUS (1987)',
   h1:'Climb the rotating tower to the top', h2:'Jump the gaps and crumbling ledges',
-  h3:'Ride the lifts, mind the doors', h4:'Shoot the enemies',
+  h3:'Ride the lifts, enter the door on top', h4:'Shoot the enemies',
   h5:'Between towers: underwater fish bonus',
   k1:'← →  walk    ↑/space  jump', k2:'X / ↓  shoot     M  music     L  language',
   tapStart:'▶  TAP or ENTER to start', tapNew:'▶  TAP or ENTER for a new game',
@@ -115,9 +119,9 @@ const STR={
   scoreLbl:'Score', bonusNext:'Next: the underwater submarine BONUS',
   bonusGo:'BONUS — CATCH THE FISH!', bonusHud:'BONUS   FISH', bonusKeys:'▲ rise   ✦ bubble',
   hiscores:'HI-SCORES', you:'YOU', rank:'#', twr:'TWR', newRec:'NEW RECORD!', enterName:'ENTER YOUR NAME', okBtn:'OK', saving:'saving…', loading:'loading scores…', offline:'offline — local scores only'},
- sl:{game:'S T O L P', tower:'STOLP', tribute:'priklon igri NEBULUS (1987)',
+ sl:{nickHint:'prikazano na spletni lestvici', doorEnter:'SKOZI VRATA!', findDoor:'NAJDI VRATA NA VRHU!', towerDown:'STOLP UNIČEN!', playingAs:'IGRAŠ KOT', changeName:'tapni za spremembo', enterNick:'VPIŠI SVOJE IME', okBtn2:'ZAČNI', game:'S T O L P', tower:'STOLP', tribute:'priklon igri NEBULUS (1987)',
   h1:'Splezaj po vrtečem stolpu do vrha', h2:'Preskakuj luknje in nestabilne dele',
-  h3:'Uporabi dvigala, pazi na vrata', h4:'Streljaj na sovražnike',
+  h3:'Uporabi dvigala, na vrhu vstopi skozi vrata', h4:'Streljaj na sovražnike',
   h5:'Med stolpi: podvodni bonus z ribami',
   k1:'← →  hoja    ↑/preslednica  skok', k2:'X / ↓  streljanje   M  glasba   L  jezik',
   tapStart:'▶  TAPNI ali ENTER za start', tapNew:'▶  TAPNI ali ENTER za novo igro',
@@ -127,9 +131,9 @@ const STR={
   scoreLbl:'Točke', bonusNext:'Sledi podvodni BONUS s podmornico',
   bonusGo:'BONUS — ULOVI RIBE!', bonusHud:'BONUS   RIBE', bonusKeys:'▲ dvig   ✦ mehurček',
   hiscores:'NAJBOLJŠI REZULTATI', you:'TI', rank:'#', twr:'STO', newRec:'NOV REKORD!', enterName:'VPIŠI SVOJE IME', okBtn:'V REDU', saving:'shranjujem…', loading:'nalagam rezultate…', offline:'brez povezave — lokalni rezultati'},
- de:{game:'T U R M', tower:'TURM', tribute:'eine Hommage an NEBULUS (1987)',
+ de:{nickHint:'erscheint in der Online-Bestenliste', doorEnter:'DURCH DIE TÜR!', findDoor:'FINDE DIE TÜR OBEN!', towerDown:'TURM ZERSTÖRT!', playingAs:'DU SPIELST ALS', changeName:'tippen zum Ändern', enterNick:'NAME EINGEBEN', okBtn2:'START', game:'T U R M', tower:'TURM', tribute:'eine Hommage an NEBULUS (1987)',
   h1:'Erklimme den rotierenden Turm', h2:'Springe über Lücken und morsche Kanten',
-  h3:'Nutze die Aufzüge, achte auf Türen', h4:'Schieße auf die Gegner',
+  h3:'Nutze die Aufzüge, oben durch die Tür', h4:'Schieße auf die Gegner',
   h5:'Zwischen den Türmen: Unterwasser-Bonus',
   k1:'← →  gehen    ↑/Leertaste  springen', k2:'X / ↓  schießen   M  Musik   L  Sprache',
   tapStart:'▶  TIPPEN oder ENTER zum Start', tapNew:'▶  TIPPEN oder ENTER für neues Spiel',
@@ -139,9 +143,9 @@ const STR={
   scoreLbl:'Punkte', bonusNext:'Als Nächstes: der U-Boot-BONUS',
   bonusGo:'BONUS — FANGE DIE FISCHE!', bonusHud:'BONUS   FISCHE', bonusKeys:'▲ steigen   ✦ Blase',
   hiscores:'BESTENLISTE', you:'DU', rank:'#', twr:'TRM', newRec:'NEUER REKORD!', enterName:'NAME EINGEBEN', okBtn:'OK', saving:'speichere…', loading:'lade Punkte…', offline:'offline — nur lokale Punkte'},
- it:{game:'T O R R E', tower:'TORRE', tribute:'un omaggio a NEBULUS (1987)',
+ it:{nickHint:'appare nella classifica online', doorEnter:'DENTRO LA PORTA!', findDoor:'TROVA LA PORTA IN CIMA!', towerDown:'TORRE DISTRUTTA!', playingAs:'GIOCHI COME', changeName:'tocca per cambiare', enterNick:'INSERISCI NOME', okBtn2:'INIZIA', game:'T O R R E', tower:'TORRE', tribute:'un omaggio a NEBULUS (1987)',
   h1:'Scala la torre rotante fino in cima', h2:'Salta i vuoti e le sporgenze instabili',
-  h3:'Usa gli ascensori, attento alle porte', h4:'Spara ai nemici',
+  h3:'Usa gli ascensori, in cima entra nella porta', h4:'Spara ai nemici',
   h5:'Tra le torri: bonus subacqueo con i pesci',
   k1:'← →  cammina    ↑/spazio  salta', k2:'X / ↓  spara   M  musica   L  lingua',
   tapStart:'▶  TOCCA o INVIO per iniziare', tapNew:'▶  TOCCA o INVIO per una nuova partita',
@@ -151,9 +155,9 @@ const STR={
   scoreLbl:'Punti', bonusNext:'Ora: il BONUS subacqueo col sottomarino',
   bonusGo:'BONUS — PRENDI I PESCI!', bonusHud:'BONUS   PESCI', bonusKeys:'▲ sali   ✦ bolla',
   hiscores:'MIGLIORI PUNTEGGI', you:'TU', rank:'#', twr:'TOR', newRec:'NUOVO RECORD!', enterName:'INSERISCI NOME', okBtn:'OK', saving:'salvataggio…', loading:'caricamento…', offline:'offline — punteggi locali'},
- fr:{game:'T O U R', tower:'TOUR', tribute:'un hommage à NEBULUS (1987)',
+ fr:{nickHint:'affiché dans le classement en ligne', doorEnter:'DANS LA PORTE !', findDoor:'TROUVE LA PORTE EN HAUT !', towerDown:'TOUR DÉTRUITE !', playingAs:'TU JOUES EN TANT QUE', changeName:'touche pour changer', enterNick:'ENTREZ VOTRE NOM', okBtn2:'DÉMARRER', game:'T O U R', tower:'TOUR', tribute:'un hommage à NEBULUS (1987)',
   h1:'Grimpe la tour rotative jusqu\'au sommet', h2:'Saute les trous et les corniches fragiles',
-  h3:'Prends les ascenseurs, attention aux portes', h4:'Tire sur les ennemis',
+  h3:'Prends les ascenseurs, entre par la porte en haut', h4:'Tire sur les ennemis',
   h5:'Entre les tours : bonus sous-marin aux poissons',
   k1:'← →  marcher    ↑/espace  sauter', k2:'X / ↓  tirer   M  musique   L  langue',
   tapStart:'▶  TOUCHE ou ENTRÉE pour commencer', tapNew:'▶  TOUCHE ou ENTRÉE pour rejouer',
@@ -265,6 +269,7 @@ let level=1, lives=3, floorsClimbed=0, score=0, best=0;
 let rot=0, camY=0;
 let TOP=13;
 let floors=[], enemies=[], bullets=[], lifts=[], doors=[];
+let exitDoor=null, collapse=0, topHintShown=false;
 let timeLeft=75, TIME0=75;
 let player={y:0, floor:0, vy:0, ground:true, inv:0, face:1, cd:0, onLift:null};
 // bonus (underwater) stage
@@ -336,7 +341,6 @@ function segAt(f,a){ if(f<0||f>TOP)return null; const u=floors[f].unst; if(!u)re
   for(const s of u){ if(adist(a,s.c)<s.h) return s; } return null; }
 function ledgeAt(f,a){ if(f<0||f>TOP) return false; if(inGap(f,a)) return false;
   const s=segAt(f,a); if(s&&s.state==='gone') return false; return true; }
-function doorOpen(d){ const t=((perfNow*0.001)+d.phase)%d.period; return t < d.period*0.52; }
 function rnd(a,b){return a+Math.random()*(b-a);}
 function clearAngle(f,tries=30){ for(let i=0;i<tries;i++){ const a=rnd(0,TAU);
   if(!inGap(f,a) && !segAt(f,a)) return a; } return rnd(0,TAU); }
@@ -372,13 +376,12 @@ function buildLevel(){
       enemies.push({floor:f, a:rnd(0,TAU), v:(Math.random()<.5?-1:1)*rnd(.55,1.0+level*.1), type:t});
     }
   }
-  // doors (open/close; block walking when closed, but jumpable)
+  // The exit door: as in the original Nebulus, the top of the tower carries a
+  // single door. Entering it is what completes the tower and triggers its
+  // collapse -- simply standing on the top ledge is not enough.
   doors=[];
-  const nd=1+(level>=2?1:0);
-  for(let i=0;i<nd;i++){
-    const f=Math.floor(rnd(2,TOP-1));
-    doors.push({floor:f, a:clearAngle(f), w:0.13, period:rnd(2.4,3.6), phase:rnd(0,3)});
-  }
+  exitDoor={floor:TOP, a:clearAngle(TOP), w:0.17};
+  collapse=0;
   // one lift spanning a few floors (alternative climb route)
   lifts=[];
   {
@@ -570,38 +573,52 @@ async function submitOnline(name,sc,lv){
     return r.ok;
   }catch(e){ return false; }
 }
+// The name is chosen before playing, so a run now ends without interruption:
+// the score is submitted on the player's behalf and the board refreshes.
 function onDeath(sc,lv){
-  deadScore=sc; deadLevel=lv; myEntry=null;
+  deadScore=sc; deadLevel=lv;
+  const nm=playerName||'???';
+  myEntry={n:nm,s:sc,l:lv};
   localSubmit(sc,lv);
-  loadBoard();
-  if(sc>0) openNameEntry();
+  (async()=>{
+    if(sc>0){ const ok=await submitOnline(nm,sc,lv); if(!ok) boardState='error'; }
+    await loadBoard();
+  })();
 }
 
 // ---------- name entry overlay ----------
 function safeLS(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } }
 let nameEntryOpen=false;
-function openNameEntry(){
-  const box=document.getElementById('nameBox'), inp=document.getElementById('nameInput');
-  document.getElementById('nameTitle').textContent=T('newRec');
-  document.getElementById('namePrompt').textContent=T('enterName');
-  document.getElementById('nameOk').textContent=T('okBtn');
+// Chosen once, before playing, and remembered. pendingStart carries what to do
+// after the overlay closes, so the same overlay serves both the first run and a
+// later "tap to change" from the title screen.
+let playerName=safeLS('nb_name')||'';
+let pendingStart=false;
+function openNameEntry(startAfter){
+  pendingStart=!!startAfter;
+  const inp=document.getElementById('nameInput');
+  document.getElementById('nameTitle').textContent=T('enterNick');
+  document.getElementById('namePrompt').textContent=T('nickHint');
+  document.getElementById('nameOk').textContent=startAfter?T('okBtn2'):T('okBtn');
   document.getElementById('nameOk').disabled=false;
   document.getElementById('nameNote').textContent='';
-  inp.value=safeLS('nb_name')||'';
-  box.style.display='flex'; nameEntryOpen=true;
+  inp.value=playerName||'';
+  document.getElementById('nameBox').style.display='flex'; nameEntryOpen=true;
   setTimeout(()=>{ try{ inp.focus(); inp.select(); }catch(e){} },60);
 }
-async function finishNameEntry(){
+function finishNameEntry(){
   if(!nameEntryOpen) return;
-  const inp=document.getElementById('nameInput'), note=document.getElementById('nameNote');
+  const inp=document.getElementById('nameInput');
   let nm=(inp.value||'').trim().toUpperCase().replace(/[^ -~]/g,'').slice(0,12);
   if(!nm) nm='???';
-  safeLS('nb_name',nm);
-  myEntry={n:nm,s:deadScore,l:deadLevel};
-  note.textContent=T('saving'); document.getElementById('nameOk').disabled=true;
-  const ok=await submitOnline(nm,deadScore,deadLevel);
+  playerName=nm; safeLS('nb_name',nm);
   nameEntryOpen=false; document.getElementById('nameBox').style.display='none';
-  if(ok){ await loadBoard(); } else { boardState='error'; }
+  if(pendingStart){ pendingStart=false; lockInput(0.35); startGame(); }
+}
+// Called from the title screen: ask for a name the first time, otherwise play.
+function beginPlay(){
+  if(!playerName){ openNameEntry(true); return; }
+  startGame();
 }
 function drawHiScores(top){
   text(T('hiscores'),CX,top,20,'#7fe3ff');
@@ -636,7 +653,7 @@ function press(k,down){
     if(inputLock>0) return;                  // a gesture already in flight must not skip the next screen
     if(state==='boot') endBoot();
     else if(state==='intro') endIntro();
-    else if(state==='title'||state==='dead') startGame();
+    else if(state==='title'||state==='dead') beginPlay();
     else if(state==='win') startBonus();
     else if(state==='bonusend') nextLevel();
   }
@@ -649,6 +666,7 @@ addEventListener('keydown',e=>{
   else if(e.key==='ArrowUp'||e.code==='Space')press('jump',true);
   else if(e.key==='ArrowDown'||e.key==='x'||e.key==='X'||e.key==='z'||e.key==='Z')press('fire',true);
   else if(e.key==='Enter')press('start',true);
+  else if((e.key==='n'||e.key==='N')&&state==='title'){openNameEntry(false);}
   else if(e.key==='m'||e.key==='M')toggleMute();
   else if(e.key==='l'||e.key==='L')cycleLang();
 });
@@ -673,6 +691,7 @@ function bindUI(id,fn){ const el=document.getElementById(id);
   el.addEventListener('touchstart',e=>{e.stopPropagation();e.preventDefault();fn();},{passive:false}); }
 bindUI('mute',()=>toggleMute());
 bindUI('lang',()=>cycleLang());
+bindUI('nick',()=>openNameEntry(false));
 document.getElementById('lang').textContent=lang.toUpperCase();
 document.documentElement.lang=lang;
 (function(){ const ok=document.getElementById('nameOk'), inp=document.getElementById('nameInput');
@@ -685,7 +704,7 @@ document.documentElement.lang=lang;
 function menuTap(e){ if(nameEntryOpen)return; if(inputLock>0){if(e&&e.cancelable)e.preventDefault();return;}
   if(state==='boot'){if(e&&e.cancelable)e.preventDefault();endBoot();}
   else if(state==='intro'){if(e&&e.cancelable)e.preventDefault();endIntro();}
-  else if(state==='title'||state==='dead'){if(e&&e.cancelable)e.preventDefault();startGame();}
+  else if(state==='title'||state==='dead'){if(e&&e.cancelable)e.preventDefault();beginPlay();}
   else if(state==='win'){if(e&&e.cancelable)e.preventDefault();startBonus();}
   else if(state==='bonusend'){if(e&&e.cancelable)e.preventDefault();nextLevel();} }
 
@@ -711,7 +730,7 @@ function gRelease(){
   press('jump',false);
   // note: the sub keeps its steered position after you lift your finger (cleared in startBonus)
 }
-function onUI(ev){ const t=ev.target; return t&&t.closest&&t.closest('#mute,#lang,#ctrl,#pad'); }
+function onUI(ev){ const t=ev.target; return t&&t.closest&&t.closest('#mute,#lang,#ctrl,#nick,#pad'); }
 function gStart(ev){
   if(onUI(ev))return;                      // let the small UI buttons handle their own taps
   if(inputLock>0){ if(ev.cancelable)ev.preventDefault(); return; }
@@ -795,9 +814,7 @@ function update(dt){
   if(dRot!==0){
     let nr=rot+dRot;
     if(player.ground && !player.onLift){
-      for(const d of doors){ if(d.floor===player.floor && !doorOpen(d)){
-        if(adist(nr,d.a)<d.w && adist(rot,d.a)>=d.w){ nr=rot; break; }
-      }}
+      // The exit door is a goal, not a barrier -- nothing blocks walking now.
     }
     rot=((nr%TAU)+TAU)%TAU;
   }
@@ -863,9 +880,14 @@ function update(dt){
 
   if(player.ground && player.floor>floorsClimbed) floorsClimbed=player.floor;
 
-  if(player.floor>=TOP && player.ground){
-    const bonus=Math.floor(timeLeft)*15+level*200; score+=bonus;
-    state='win'; best=Math.max(best,level); sfx.win(); lockInput(0.9); msg(T('atTop')+'  +'+bonus,2.2); return;
+  // Reaching the top only gets you to the door; you still have to walk into it.
+  if(player.floor>=TOP && player.ground && exitDoor){
+    if(adist(rot,exitDoor.a) < exitDoor.w){
+      const bonus=Math.floor(timeLeft)*15+level*200; score+=bonus;
+      state='collapse'; collapse=0; best=Math.max(best,level);
+      sfx.win(); lockInput(2.6); msg(T('doorEnter')+'  +'+bonus,2.2); return;
+    }
+    if(!topHintShown){ topHintShown=true; msg(T('findDoor'),2.6); }
   }
 
   // bullets
@@ -898,6 +920,40 @@ function loseLife(cause){
 }
 
 // ---------- render ----------
+// ---------- tower collapse (triggered by entering the exit door) ----------
+// Entering the door sets off the destruction mechanism: the tower shakes, then
+// sinks into the sea, exactly as the original does before the bonus stage.
+function updateCollapse(dt){
+  if(msgT>0) msgT-=dt;
+  collapse+=dt;
+  // sink the camera with the tower so it visibly goes under
+  if(collapse>0.9) camY-=(collapse-0.9)*46*dt*12;
+  if(collapse>0.35 && collapse<2.2 && Math.random()<0.16) sfx.crumble();
+  if(collapse>=2.6){ startBonus(); }
+}
+function drawCollapse(){
+  const shake=collapse<0.9 ? (1-collapse/0.9)*5 : 0;
+  if(shake>0){
+    X.save(); X.translate((Math.random()-0.5)*shake,(Math.random()-0.5)*shake); X.restore();
+  }
+  // spray of debris falling into the sea
+  const n=collapse>0.35?26:0;
+  for(let i=0;i<n;i++){
+    const seed=(i*97)%360, a=seed/360*TAU;
+    const t=Math.max(0,collapse-0.35-(i%7)*0.05);
+    const x=CX+Math.sin(a)*R*(0.6+0.5*Math.cos(a-rot));
+    const y=GROUND-220+ t*t*160 + (i%5)*18;
+    if(y>H) continue;
+    X.fillStyle=i%3?'#6f83b8':'#9fb6ff';
+    X.globalAlpha=Math.max(0,1-t*0.5);
+    X.fillRect(x,y,3,3);
+    X.globalAlpha=1;
+  }
+  const fade=Math.min(1,Math.max(0,(collapse-1.6)/1.0));
+  if(fade>0){ X.fillStyle='rgba(2,3,10,'+(fade*0.75)+')'; X.fillRect(0,0,W,H); }
+  text(T('towerDown'),CX,180,24,'#8affc0');
+  if(collapse>1.4) text(T('bonusNext'),CX,220,14,'#9fb6ff');
+}
 function screenY(worldY){ return GROUND-(worldY-camY); }
 function frontVisible(a){ return Math.cos(a-rot)>0; }
 
@@ -932,24 +988,35 @@ function drawTower(){
   }
 }
 function drawDoors(){
-  for(const d of doors){
-    const dep=Math.cos(d.a-rot); if(dep<=0.05)continue;
-    const sx=CX+R*Math.sin(d.a-rot);
-    const sy=screenY(d.floor*SPACING);
-    const w=(16*dep)|0, h=30;
-    const open=doorOpen(d);
-    // frame / opening
-    X.fillStyle='#06160c'; X.fillRect(sx-w/2-1,sy-h-2,w+2,h+2);
-    if(open){
-      X.fillStyle='#020805'; X.fillRect(sx-w/2,sy-h,w,h); // dark passage
-      X.fillStyle='rgba(120,200,255,.15)';X.fillRect(sx-w/2,sy-h,w,h);
-    } else {
-      const gg=X.createLinearGradient(sx-w/2,0,sx+w/2,0);
-      gg.addColorStop(0,'#3a2a12');gg.addColorStop(.5,'#7a5a28');gg.addColorStop(1,'#3a2a12');
-      X.fillStyle=gg; X.fillRect(sx-w/2,sy-h,w,h);
-      X.strokeStyle='#241705';X.lineWidth=1;
-      X.strokeRect(sx-w/2+2,sy-h+3,w-4,h-6);
-      X.fillStyle='#ffd23f';X.fillRect(sx+w/2-4,sy-h/2-1,2,3); // handle
+  // The exit door at the top: an open, lit archway, so it reads as somewhere to
+  // go rather than something in the way. It pulses to draw the eye.
+  if(exitDoor){
+    const d=exitDoor;
+    const dep=Math.cos(d.a-rot);
+    if(dep>0.05){
+      const sx=CX+R*Math.sin(d.a-rot);
+      const sy=screenY(d.floor*SPACING);
+      const w=(20*dep)|0, h=34;
+      const near=(player.floor>=TOP && adist(rot,d.a)<d.w);
+      const pulse=0.55+0.45*Math.sin(perfNow*0.005);
+      // glow spilling out of the doorway
+      const gl=X.createRadialGradient(sx,sy-h/2,1,sx,sy-h/2,w*2.4);
+      gl.addColorStop(0,'rgba(140,255,220,'+(0.5*pulse+(near?0.4:0))+')');
+      gl.addColorStop(1,'rgba(140,255,220,0)');
+      X.fillStyle=gl; X.fillRect(sx-w*2.4,sy-h-w*1.4,w*4.8,h+w*2.8);
+      // frame
+      X.fillStyle='#0a2418'; X.fillRect(sx-w/2-2,sy-h-3,w+4,h+3);
+      // dark passage with an inner light
+      X.fillStyle='#01120c'; X.fillRect(sx-w/2,sy-h,w,h);
+      const ig=X.createLinearGradient(0,sy-h,0,sy);
+      ig.addColorStop(0,'rgba(150,255,225,'+(0.30*pulse)+')');
+      ig.addColorStop(1,'rgba(150,255,225,0)');
+      X.fillStyle=ig; X.fillRect(sx-w/2,sy-h,w,h);
+      X.strokeStyle=near?'#ffffff':'#8affc0'; X.lineWidth=2;
+      X.strokeRect(sx-w/2,sy-h,w,h);
+      if(dep>0.55){
+        text('▼',sx,sy-h-12,12,near?'#ffffff':'#8affc0');
+      }
     }
   }
 }
@@ -1159,7 +1226,11 @@ function drawOverlay(){
       text(T('k1'),CX,376,13,'#9fb6ff');
       text(T('k2'),CX,400,13,'#9fb6ff');
     }
-    if(Math.floor(perfNow/500)%2===0)text(T('tapStart'),CX,468,18,'#ffd23f');
+    if(playerName){
+      text(T('playingAs')+': '+playerName,CX,442,14,'#8affc0');
+      text('('+T('changeName')+')',CX,460,11,'#6f83b8');
+    }
+    if(Math.floor(perfNow/500)%2===0)text(T('tapStart'),CX,488,18,'#ffd23f');
   } else if(state==='dead'){
     text(T('gameOver'),CX,92,34,'#ff5c7a');
     text(T('scoreLbl')+': '+score+'    '+T('towerReached')+': '+level,CX,128,15,'#e8eeff');
@@ -1188,7 +1259,9 @@ function frame(t){
   if(dt>0.1)dt=0.1; acc+=dt;
   while(acc>=1/60){ if(inputLock>0) inputLock=Math.max(0,inputLock-1/60);
     if(state==='boot') updateBoot(1/60); else if(state==='bonus') updateBonus(1/60);
-    else if(state==='intro') updateIntro(1/60); else update(1/60); acc-=1/60; }
+    else if(state==='intro') updateIntro(1/60);
+    else if(state==='collapse') updateCollapse(1/60);
+    else update(1/60); acc-=1/60; }
 
   if(state==='boot'){
     drawBoot();
@@ -1206,18 +1279,27 @@ function frame(t){
     drawLedges();
     drawBullets();
     drawEnemies();
-    if(state==='play'||state==='win') drawPogo();
+    if(state==='play') drawPogo();   // Pogo is inside the door during collapse
     drawSea();
     if(state==='intro') drawIntroFg();
     if(state==='play') drawHUD();
+    if(state==='collapse') drawCollapse();
     if(state==='title'||state==='dead'||state==='win') drawOverlay();
     camY+=(player.floor*SPACING-camY)*0.12;
   }
+  { const nb=document.getElementById('nick');
+    const want=(state==='title')?'flex':'none';
+    if(nb && nb.style.display!==want) nb.style.display=want; }
   pumpMusic();
   requestAnimationFrame(frame);
 }
 buildLevel();
 requestAnimationFrame(frame);
+
+// test hook (see skill: retro-browser-game)
+window.__game={get state(){return state;},get score(){return score;},get level(){return level;},
+  get playerName(){return playerName;},get exitDoor(){return exitDoor;},get collapse(){return collapse;},
+  player,beginPlay,startGame,openNameEntry};
 </script>
 </body>
 </html>
