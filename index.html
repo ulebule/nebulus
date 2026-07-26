@@ -704,7 +704,13 @@ document.documentElement.lang=lang;
 function menuTap(e){ if(nameEntryOpen)return; if(inputLock>0){if(e&&e.cancelable)e.preventDefault();return;}
   if(state==='boot'){if(e&&e.cancelable)e.preventDefault();endBoot();}
   else if(state==='intro'){if(e&&e.cancelable)e.preventDefault();endIntro();}
-  else if(state==='title'||state==='dead'){if(e&&e.cancelable)e.preventDefault();beginPlay();}
+  else if(state==='title'||state==='dead'){
+    if(e&&e.cancelable)e.preventDefault();
+    // The title screen prints the name with "(tap to change)" beneath it, so a
+    // tap on that band has to do that rather than silently start a run.
+    if(state==='title' && playerName && hitNameBand(e)){ openNameEntry(false); return; }
+    beginPlay();
+  }
   else if(state==='win'){if(e&&e.cancelable)e.preventDefault();startBonus();}
   else if(state==='bonusend'){if(e&&e.cancelable)e.preventDefault();nextLevel();} }
 
@@ -731,6 +737,17 @@ function gRelease(){
   // note: the sub keeps its steered position after you lift your finger (cleared in startBonus)
 }
 function onUI(ev){ const t=ev.target; return t&&t.closest&&t.closest('#mute,#lang,#ctrl,#nick,#pad'); }
+// True when a tap landed on the "PLAYING AS / tap to change" lines, which are
+// drawn on the canvas at y≈442..470 in the fixed 480x640 coordinate space.
+function hitNameBand(ev){
+  try{
+    const r=stageEl.getBoundingClientRect();
+    const p=(ev.touches&&ev.touches[0])||(ev.changedTouches&&ev.changedTouches[0])||ev;
+    if(p.clientY===undefined) return false;
+    const y=(p.clientY-r.top)/r.height*H;
+    return y>=430 && y<=478;
+  }catch(e){ return false; }
+}
 function gStart(ev){
   if(onUI(ev))return;                      // let the small UI buttons handle their own taps
   if(inputLock>0){ if(ev.cancelable)ev.preventDefault(); return; }
