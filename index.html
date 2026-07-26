@@ -609,7 +609,13 @@ function openNameEntry(startAfter){
 function finishNameEntry(){
   if(!nameEntryOpen) return;
   const inp=document.getElementById('nameInput');
-  let nm=(inp.value||'').trim().toUpperCase().replace(/[^ -~]/g,'').slice(0,12);
+  // Keep any letter or digit in any script -- Š, Č, Ž, Ć, Đ and friends all
+  // belong in a name -- plus a few separators. Only control characters and
+  // stray symbols are dropped. \p{..} needs the u flag.
+  let nm=(inp.value||'').trim().toUpperCase()
+           .replace(/[^\p{L}\p{N} .'\-_]/gu,'')
+           .replace(/\s+/g,' ')
+           .slice(0,12).trim();
   if(!nm) nm='???';
   playerName=nm; safeLS('nb_name',nm);
   nameEntryOpen=false; document.getElementById('nameBox').style.display='none';
