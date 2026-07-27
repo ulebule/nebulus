@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>TOWER — a tribute to Nebulus</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#02030a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TOWER">
 <style>
   html,body{margin:0;height:100%;background:#02030a;overflow:hidden;
     font-family:"Courier New",monospace;-webkit-user-select:none;user-select:none;
@@ -1323,6 +1331,15 @@ requestAnimationFrame(frame);
 window.__game={get state(){return state;},get score(){return score;},get level(){return level;},
   get playerName(){return playerName;},get exitDoor(){return exitDoor;},get collapse(){return collapse;},
   player,beginPlay,startGame,openNameEntry};
+</script>
+<script>
+/* PWA: cache the game so it runs with no connection (see sw.js) */
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+  var ok = location.protocol==='https:' || location.hostname==='localhost' || location.hostname==='127.0.0.1';
+  if(!ok) return;
+  addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+})();
 </script>
 </body>
 </html>

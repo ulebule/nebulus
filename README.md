@@ -77,6 +77,17 @@ deliberately uses no browser storage.
 This is an original implementation written from scratch as a homage. It shares no code or assets
 with the 1987 game; Nebulus was created by John M. Phillips and published by Hewson Consultants.
 
+## Install it
+
+The game is a PWA: a browser will offer to add it to the home screen (on iOS,
+Share → *Add to Home Screen*), and it then opens standalone, without browser
+chrome. A service worker caches `index.html`, the manifest and the icons, so
+after the first visit the game **runs with no connection at all**.
+
+The worker only touches same-origin requests, and the cache key is prefixed
+with the repo name — the other games published under `ulebule.github.io` keep
+their own caches instead of evicting each other.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
