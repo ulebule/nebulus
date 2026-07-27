@@ -63,6 +63,18 @@
   #nameOk:active{background:#fff;}
   #nameOk:disabled{opacity:.5;}
   #nameNote{margin-top:10px;color:#9affc0;font-size:12px;min-height:14px;}
+
+  /* ---- touch targets -------------------------------------------------
+     The chrome buttons down the left edge are 30px, which is hard to hit
+     with a thumb. Enlarge them on coarse pointers and re-space the column
+     so the bigger boxes do not overlap. */
+  @media (pointer:coarse){
+    #mute,#lang,#ctrl,#nick{width:46px;height:46px;border-radius:10px;}
+    #mute{top:56px;} #lang{top:110px;font-size:15px;}
+    #ctrl{top:164px;font-size:20px;}
+    #nick{top:218px;font-size:20px;}
+    #nameOk{min-height:48px;padding:0 34px;font-size:17px;}
+  }
 </style>
 </head>
 <body>
